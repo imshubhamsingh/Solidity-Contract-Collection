@@ -1,6 +1,10 @@
 pragma solidity ^0.4.8;
 
-contract MyFirstContract {
+contract Bank {
+    
+}
+
+contract MyFirstContract is Bank {
     string private name;
     uint private age;
 
