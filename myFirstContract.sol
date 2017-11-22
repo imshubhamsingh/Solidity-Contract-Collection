@@ -1,6 +1,11 @@
 pragma solidity ^0.4.8;
 
-contract Bank {
+interface Regulator {
+    function checkValue(uint amount) returns(bool);
+    function loan() returns (bool);    
+}
+
+contract Bank is Regulator {
     // To proctect from outside world but want MyFirstContract to use it
     // We use internal that is similar to protected
     // uint internal myInternalValue;
@@ -16,7 +21,9 @@ contract Bank {
     }
 
     function withdraw(uint amount) {
-        value += amount;        
+        if(checkValue(amount)){
+            value -= amount;      
+        }
     }
 
     function balance() returns (uint) {
@@ -24,6 +31,15 @@ contract Bank {
     }
     //abstract function
     //function loan() returns (bool);
+
+       
+    function checkValue(uint amount) returns(bool) {
+        return value >= amount;
+    }
+
+    function loan() returns (bool) {
+        return value>0;
+    }
 }
 
 contract MyFirstContract is Bank(10) {
@@ -44,9 +60,5 @@ contract MyFirstContract is Bank(10) {
 
     function getAge() returns (uint) {
         return age;                
-    }
-
-    function loan() returns (bool) {
-        return true;
-    }
+    } 
 }
