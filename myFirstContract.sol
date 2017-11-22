@@ -11,16 +11,23 @@ contract Bank is Regulator {
     // uint internal myInternalValue;
 
     uint private value;
+    address private owner;
+
+    modifier ownerFunc {
+        require(owner == msg.sender);
+        _;
+    }
 
     function Bank(uint amount) {
         value = amount;
+        owner = msg.sender;
     }
 
-    function deposit(uint amount) {
+    function deposit(uint amount) ownerFunc {
         value += amount;
     }
 
-    function withdraw(uint amount) {
+    function withdraw(uint amount) ownerFunc {
         if(checkValue(amount)){
             value -= amount;      
         }
