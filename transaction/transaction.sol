@@ -19,7 +19,7 @@ contract Transaction {
     }
 
     event SenderLogger(address);
-    event ValueLogger(uint);
+            
     
     function() payable isOwner validValue{
         SenderLogger(msg.sender);
