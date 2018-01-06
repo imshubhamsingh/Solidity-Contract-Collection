@@ -28,6 +28,7 @@ contract MyFirstToken is ERC20 {
          if(__value>0 && _value<=balanceOf(msg.sender)){
              __balanceOf[msg.sender] -= _value;
              __balanceOf[_to] += value;
+             Transfer(msg.sender, _to, _value);
              return true;
          }
          return false;
@@ -35,11 +36,13 @@ contract MyFirstToken is ERC20 {
 
     function transferFrom(address _from, address _to, uint _value) returns (bool success){
         if(__allowances[_from][msg.sender]> 0 &&
-           _value>0 && 
+           _value>0 && __balanceOf[_from]>= _value
            __allowances[_from][msg.sender] >= _value 
         ){
              __balanceOf[_from] -= _value;
              __balanceOf[_to] += value;
+             __allowances[msg.sender][_from] -= value
+             Transfer(_from, _to, _value);
              return true;
         }
         return false;
@@ -47,6 +50,7 @@ contract MyFirstToken is ERC20 {
 
     function approve(address _spender, uint value) returns (bool success){
         __allowances[msg.sender][_spender] = value
+        Approval(msg.sender, _spender, _value);
         return true;
     }
 
