@@ -25,4 +25,19 @@ contract Assembly {
         }         
         return 11;
     }
+
+    function asmCondition(uint _v) public returns (uint _r) {
+        assembly{
+            switch _v
+            case 5 {
+                _r := 55
+            }
+            case 6 {
+                _r := 66
+            }
+            default {
+                _r := 11
+            }
+        }
+    }
 }
