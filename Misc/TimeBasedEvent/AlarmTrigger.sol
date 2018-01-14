@@ -5,7 +5,7 @@ interface AlarmWakeUp {
 }
 
 contract AlarmService {
-    mapping(uint => TimeEvent[])private _events;
+    mapping(uint => TimeEvent[]) private _events;
 
     struct TimeEvent {
         address addr;
