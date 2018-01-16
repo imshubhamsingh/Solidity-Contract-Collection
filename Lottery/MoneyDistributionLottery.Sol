@@ -1,0 +1,79 @@
+pragma solidity ^0.4.18;
+
+contract MDL {
+    struct Lottery {
+        uint id;
+        address creator;
+        uint initialBalance;
+        uint remainingBalance;
+        uint totalClaims;
+        uint startTime;
+        uint hash;
+        mapping( address => uint) claims;        
+    }
+
+    event Claimed(
+		address indexed _from,
+		uint _id,
+		uint _value
+	);
+
+    uint private _lotteryIndex;
+    uint private endTIme = 1 days;
+    mapping (uint => Lottery) private _lotteries;
+    mapping (string => address) private textToAddress;
+
+    function MDL() public {
+		_lotteryIndex = 0;
+	}
+
+    function createLottery(string _passcode) public payable returns (bool){
+        require(msg.value > 50 ether);
+        _lotteryIndex += 1;
+        _lotteries[_lotteryIndex] = Lottery(
+                                    _lotteryIndex,
+                                    msg.sender,
+                                    msg.value,
+                                    msg.value,
+                                    0,
+                                    now,
+                                    uint(keccak256(_passcode,msg.sender))
+                                    );
+        textToAddress[_passcode] = msg.sender;
+
+    return true;
+    }
+
+    function checkPasscode(string _passcode, uint lotteryIndex) private view returns (bool){
+        require(_lotteries[lotteryIndex].hash == uint(keccak256(_passcode,textToAddress[_passcode])));
+        return true;
+    }
+
+
+    function ClaimedlotteryAmount(uint _remainingBalance) private view returns (uint){
+        if (_remainingBalance < 4.2 ether) {
+			return _remainingBalance;
+		}
+
+        uint amount = uint(keccak256(block.timestamp))%(_remainingBalance-4.2 ether) + 4.2 ether;
+        require (amount > 0);
+		require (amount <= _remainingBalance);
+		return amount;
+    }
+
+    function ClainLotteryMoneyPortion(string _passcode, uint lotteryIndex) public {
+        Lottery storage l = _lotteries[lotteryIndex];
+        require (checkPasscode(_passcode, _lotteryIndex));
+		require (l.remainingBalance > 0);
+
+        uint claimAmount = ClaimedlotteryAmount(l.remainingBalance);
+		l.remainingBalance -= claimAmount;
+       
+        msg.sender.transfer(claimAmount);
+		l.totalClaims += 1;
+		l.claims[msg.sender] = claimAmount;
+
+        Claimed(msg.sender, l.id, claimAmount);
+    } 
+
+}
