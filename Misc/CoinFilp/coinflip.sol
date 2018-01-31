@@ -15,5 +15,4 @@ contract ConiFlip is usingOracalize {
         require(msg.sender == oraclize_cbAddress());
         result = _result;
     }
-
 }
