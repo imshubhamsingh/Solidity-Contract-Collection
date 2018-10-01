@@ -1,6 +1,6 @@
-# Solidarity Contract Collection
+# Solidity Contract Collection
 
-A collection of Ethereum Solidarity contracts.
+A collection of Ethereum Solidity contracts.
 
 ## Contributing
 
