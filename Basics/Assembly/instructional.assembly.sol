@@ -1,4 +1,4 @@
-ragma solidity ^0.4.0;
+pragma solidity ^0.4.0;
 
 contract Assembly {
     function nativeLoops() public returns (uint _r) {
